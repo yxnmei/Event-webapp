@@ -4,6 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= pageTitle %> - <%= siteSettings.name %></title>
+      <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..900&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS Configuration (before CDN script) -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'], // Set Inter as the default sans-serif font
+            }
+          }
+        }
+      }
+    </script>
+    
     <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
@@ -18,22 +36,22 @@
                 Manage your events, <%= siteSettings.name %>!
             </p>
             <p class="text-md text-gray-500 italic">
-                "<%= siteSettings.description %>"
+                Description: "<%= siteSettings.description %>"
             </p>
 
             <div class="mt-6 flex flex-wrap justify-center gap-4">
-                <a href="/organiser/settings" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 shadow-md flex items-center">
+                <a href="/organiser/settings" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 ease-in-out shadow-md flex items-center">
                     <i class="fas fa-cogs mr-2"></i> Site Settings
                 </a>
-                <form action="/organiser/events/new" method="POST" class="inline-block">
-                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 shadow-md flex items-center">
-                        <i class="fas fa-plus-circle mr-2"></i> Create New Event
-                    </button>
-                </form>
-                <a href="/organiser/bookings" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 shadow-md flex items-center">
+                <a href="/organiser/bookings" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 ease-in-out  shadow-md flex items-center">
                     <i class="fas fa-book-open mr-2"></i> View All Bookings
                 </a>
-                <a href="/logout" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 shadow-md flex items-center">
+                <form action="/organiser/events/new" method="POST" class="inline-block">
+                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 ease-in-out  shadow-md flex items-center">
+                        <i class="fas fa-plus-circle mr-2"></i> New Event
+                    </button>
+                </form>
+                <a href="/logout" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 ease-in-out  shadow-md flex items-center">
                     <i class="fas fa-sign-out-alt mr-2"></i> Log Out
                 </a>
             </div>
