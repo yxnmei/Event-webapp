@@ -117,8 +117,8 @@ Before running the application, ensure you have the following installed:
 1.  **Clone the repository / Extract the project zip:**
     ```bash
     # If using git
-    git clone <your-repo-url> event-manager
-    cd event-manager
+    git clone https://github.com/yxnmei/Event-webapp.git
+    cd Event-webapp
     ```
     (Or just navigate to the extracted `event-manager` folder.)
 
