@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= pageTitle %> - <%= siteSettings.name %></title>
+    <script src="https://cdn.tailwindcss.com"></script> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center py-10">
+    <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-3xl">
+        <h1 class="text-3xl font-bold text-center text-blue-700 mb-6"><%= event.title %></h1>
+
+        <% if (successMessage) { %>
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <strong class="font-bold">Success!</strong>
+                <span class="block sm:inline"><%= successMessage %></span>
+            </div>
+        <% } %>
+        <% if (errorMessage) { %>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <strong class="font-bold">Error!</strong>
+                <span class="block sm:inline"><%= errorMessage %></span>
+            </div>
+        <% } %>
+
+        <div class="mb-6 space-y-2">
+            <p class="text-gray-700 text-lg">
+                <strong class="font-semibold">Description:</strong> <%= event.description %>
+            </p>
+            <p class="text-gray-700 text-lg">
+                <strong class="font-semibold">Date:</strong> <%= moment(event.event_date).format('MMMM Do YYYY') %>
+            </p>
+            <p class="text-gray-700 text-lg">
+                <strong class="font-semibold">Time:</strong> <%= moment(event.event_date).format('h:mm A') %>
+            </p>
+            <p class="text-gray-700 text-lg">
+                <strong class="font-semibold">Location:</strong> <i class="fas fa-map-marker-alt mr-1 text-gray-500"></i> <%= event.location || 'Not Specified' %>
+            </p>
+            <p class="text-gray-700 text-lg">
+                <strong class="font-semibold">Category:</strong> <i class="fas fa-tag mr-1 text-gray-500"></i> <%= event.category || 'N/A' %>
+            </p>
+            <% if (event.tags && event.tags.length > 0) { %>
+            <p class="text-gray-700 text-lg">
+                <strong class="font-semibold">Tags:</strong>
+                <i class="fas fa-tags mr-1 text-gray-500"></i>
+                <% event.tags.split(',').forEach(tag => { %>
+                    <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full mr-1"><%= tag.trim() %></span>
+                <% }); %>
+            </p>
+            <% } %>
+            <p class="text-gray-700 text-lg">
+                <strong class="font-semibold">Full Price Ticket:</strong> $<%= event.full_price_amount.toFixed(2) %>
+                (<span class="text-blue-700 font-semibold">Remaining: <%= event.full_price_tickets_available %></span>)
+            </p>
+            <p class="text-gray-700 text-lg">
+                <strong class="font-semibold">Concession Ticket:</strong> $<%= event.concession_amount.toFixed(2) %>
+                (<span class="text-purple-700 font-semibold">Remaining: <%= event.concession_tickets_available %></span>)
+            </p>
+        </div>
+
+        <h2 class="text-2xl font-bold text-center text-blue-600 mb-4">Book Your Tickets</h2>
+
+        <% if (event.isFullyBooked) { %>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 text-center text-lg font-semibold" role="alert">
+                <i class="fas fa-times-circle mr-2"></i> TICKETS SOLD OUT!
+                <p class="text-sm font-normal italic mt-1">No tickets are available for this event.</p>
+            </div>
+        <% } %>
+
+        <!-- Booking Form - Disabled if fully booked -->
+        <form action="/attendee/events/<%= event.id %>/book" method="POST" class="space-y-4 mb-6" <%= event.isFullyBooked ? 'aria-disabled="true"' : '' %>>
+            <fieldset <%= event.isFullyBooked ? 'disabled' : '' %>>
+                <div>
+                    <label for="userName" class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
+                    <input
+                        type="text"
+                        id="userName"
+                        name="userName"
+                        required
+                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm <%= event.isFullyBooked ? 'bg-gray-200 cursor-not-allowed' : '' %>"
+                        placeholder="Enter your name"
+                    >
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="fullTickets" class="block text-sm font-medium text-gray-700 mb-1">Full Price Tickets</label>
+                        <input
+                            type="number"
+                            id="fullTickets"
+                            name="fullTickets"
+                            value="0"
+                            min="0"
+                            max="<%= event.full_price_tickets_available %>"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm <%= event.isFullyBooked ? 'bg-gray-200 cursor-not-allowed' : '' %>"
+                        >
+                        <p class="text-xs text-gray-500 mt-1">Max: <%= event.full_price_tickets_available %></p>
+                    </div>
+                    <div>
+                        <label for="concessionTickets" class="block text-sm font-medium text-gray-700 mb-1">Concession Tickets</label>
+                        <input
+                            type="number"
+                            id="concessionTickets"
+                            name="concessionTickets"
+                            value="0"
+                            min="0"
+                            max="<%= event.concession_tickets_available %>"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm <%= event.isFullyBooked ? 'bg-gray-200 cursor-not-allowed' : '' %>"
+                        >
+                        <p class="text-xs text-gray-500 mt-1">Max: <%= event.concession_tickets_available %></p>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <button
+                        type="submit"
+                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out <%= event.isFullyBooked ? 'bg-gray-400 cursor-not-allowed hover:bg-gray-400' : '' %>"
+                        <%= event.isFullyBooked ? 'disabled' : '' %>
+                    >
+                        <i class="fas fa-ticket-alt mr-2"></i> Book Tickets
+                    </button>
+                </div>
+            </fieldset>
+        </form>
+
+        <div class="mt-8 text-center">
+            <a href="/attendee" class="text-blue-600 hover:underline flex items-center justify-center text-md">
+                <i class="fas fa-arrow-left mr-2"></i> Back to Attendee Home
+            </a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= pageTitle %> - <%= siteSettings.name %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body class="bg-gray-50 font-sans leading-normal tracking-normal">
+    <div class="container mx-auto p-6 max-w-7xl">
+        <!-- Header Section -->
+        <header class="bg-white shadow-lg rounded-lg p-6 mb-8 text-center">
+            <h1 class="text-4xl font-extrabold text-indigo-700 mb-2">
+                <i class="fas fa-ticket-alt text-indigo-500 mr-3"></i><%= pageTitle %>
+            </h1>
+            <p class="text-xl text-gray-600 mb-4">
+                Discover exciting events with <%= siteSettings.name %>!
+            </p>
+            <p class="text-md text-gray-500 italic">
+                "<%= siteSettings.description %>"
+            </p>
+            <div class="mt-6">
+                <a href="/" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 shadow-md flex items-center justify-center mx-auto w-fit">
+                    <i class="fas fa-home mr-2"></i> Back to Main Home
+                </a>
+            </div>
+        </header>
+
+        <!-- Published Events List -->
+        <section>
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">
+                <i class="fas fa-calendar-check text-green-500 mr-2"></i> Upcoming Events
+            </h2>
+            <% if (publishedEvents.length === 0) { %>
+                <p class="text-center text-gray-500 text-lg py-8 bg-white rounded-lg shadow-md">No published events currently available. Check back soon!</p>
+            <% } else { %>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <% publishedEvents.forEach(event => { %>
+                        <div class="bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden border-t-4 <%= event.isFullyBooked ? 'border-red-500' : 'border-indigo-500' %> flex flex-col">
+                            <div class="p-6 flex-grow">
+                                <h3 class="text-2xl font-bold text-gray-800 mb-2"><%= event.title %></h3>
+                                <p class="text-gray-600 text-sm mb-4 truncate"><%= event.description %></p>
+                                <div class="text-gray-700 text-sm space-y-1">
+                                    <p><strong class="font-semibold">Date:</strong> <%= moment(event.event_date).format('MMMM Do YYYY') %></p>
+                                    <p><strong class="font-semibold">Time:</strong> <%= moment(event.event_date).format('h:mm A') %></p>
+                                    <p class="flex items-center"><strong class="font-semibold mr-2">Location:</strong> <i class="fas fa-map-marker-alt text-gray-500 mr-1"></i> <%= event.location || 'N/A' %></p> <!-- NEW STYLING -->
+                                    <p class="flex items-center"><strong class="font-semibold mr-2">Category:</strong> <span class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-0.5 rounded-full"><%= event.category || 'N/A' %></span></p> <!-- NEW STYLING -->
+                                    <% if (event.tags && event.tags.trim().length > 0) { %>
+                                    <p class="flex flex-wrap items-center"><strong class="font-semibold mr-2">Tags:</strong>
+                                        <% event.tags.split(',').forEach(tag => { %>
+                                            <span class="bg-gray-100 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-full mr-1 mb-1"><%= tag.trim() %></span>
+                                        <% }); %>
+                                    </p>
+                                    <% } %>
+                                    <p class="mt-2 text-sm text-gray-600">
+                                        <i class="fas fa-ticket-alt mr-1"></i> Tickets Remaining:
+                                        <span class="font-semibold text-blue-700">Full: <%= event.full_price_tickets_available %></span> |
+                                        <span class="font-semibold text-purple-700">Concession: <%= event.concession_tickets_available %></span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 flex justify-end items-center">
+                                <% if (event.isFullyBooked) { %>
+                                    <span class="bg-red-500 text-white font-semibold py-2 px-4 rounded-full text-sm flex items-center">
+                                        <i class="fas fa-ban mr-1"></i> Fully Booked
+                                    </span>
+                                <% } else { %>
+                                    <a href="/attendee/events/<%= event.id %>" class="bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-full transition duration-200 ease-in-out transform hover:scale-105 flex items-center">
+                                        <i class="fas fa-info-circle mr-1"></i> View Details
+                                    </a>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } %>
+        </section>
+
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-gray-500 text-sm border-t pt-8">
+            <p>&copy; <%= new Date().getFullYear() %> <%= siteSettings.name %>. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

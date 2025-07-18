@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= pageTitle %> - <%= siteSettings.name %></title>
+    <script src="https://cdn.tailwindcss.com"></script> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body class="bg-gray-50 font-sans leading-normal tracking-normal">
+    <div class="container mx-auto p-6 max-w-7xl">
+        <header class="bg-white shadow-lg rounded-lg p-6 mb-8 text-center">
+            <h1 class="text-4xl font-extrabold text-purple-700 mb-2">
+                <i class="fas fa-book-open text-purple-500 mr-3"></i><%= pageTitle %>
+            </h1>
+            <p class="text-xl text-gray-600">Overview of all event bookings.</p>
+            <div class="mt-6">
+                <a href="/organiser" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 shadow-md flex items-center justify-center mx-auto w-fit">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Organiser Home
+                </a>
+            </div>
+        </header>
+
+        <section class="mb-10">
+            <% if (bookings.length === 0) { %>
+                <p class="text-center text-gray-500 text-lg py-8 bg-white rounded-lg shadow-md">No bookings have been made yet.</p>
+            <% } else { %>
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Booking ID
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Event
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Booked By
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Tickets (Full/Conc.)
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Booked At
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <% bookings.forEach(booking => { %>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            #<%= booking.booking_id %>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                            <a href="/attendee/events/<%= booking.event_id %>" class="text-blue-600 hover:underline">
+                                                <%= booking.event_title %> (<%= moment(booking.event_date).format('MMM Do, YYYY') %>)
+                                            </a>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                            <%= booking.user_name %>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                            <%= booking.full_tickets_booked %> F / <%= booking.concession_tickets_booked %> C
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                            <%= moment(booking.booked_at).format('MMM Do YYYY, h:mm A') %>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            <% } %>
+        </section>
+
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-gray-500 text-sm border-t pt-8">
+            <p>&copy; <%= new Date().getFullYear() %> <%= siteSettings.name %>. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
